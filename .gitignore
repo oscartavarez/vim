@@ -1,0 +1,7 @@
+autoload
+coc-settings.json
+colors/
+old_nvim/
+plugged/
+temp/
+yankring_history_v2.txt
