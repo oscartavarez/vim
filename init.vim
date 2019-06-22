@@ -1,9 +1,44 @@
-" Vim-plug initialization
-" Avoid modify this section, unless you are very sure of what you are doing
+" Declarations
+let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_collect_identifiers_from_tags_files = 1
 
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.config/nvim/autoload/plug.vim')
 
+" don;t show these file types
+let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
+
+" autofocus on tagbar open
+let g:tagbar_autofocus = 1
+
+" this first setting decides in which order try to guess your current vcs
+" UPDATE it to reflect your preferences, it will speed up opening files
+let g:signify_vcs_list = [ 'git', 'hg' ]
+
+" Autoclose ------------------------------
+
+" Fix to let ESC work as espected with Autoclose plugin
+" (without this, when showing an autocompletion window, ESC won't leave insert
+"  mode)
+let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
+
+" Airline ------------------------------
+
+let g:airline_theme = 'jellybeans'
+let g:airline_powerline_fonts = 0
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline_skip_empty_sections = 1
+
+let g:ctrlp_map = '<c-p>'
+let g:indent_guides_enable_on_vim_startup = 1
+let g:flutter_hot_reload_on_save = 1
+
+
+" Vim-plug initialization
+" Avoid modify this section, unless you are very sure of what you are doing
 if !filereadable(vim_plug_path)
     echo "Installing Vim-plug..."
     echo ""
@@ -21,30 +56,6 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Now the actual plugins:
 
-" to get clipboard data
-let g:clipboard = {
-  \   'name': 'xclip-xfce4-clipman',
-  \   'copy': {
-  \      '+': 'xclip -selection clipboard',
-  \      '*': 'xclip -selection clipboard',
-  \    },
-  \   'paste': {
-  \      '+': 'xclip -selection clipboard -o',
-  \      '*': 'xclip -selection clipboard -o',
-  \   },
-  \   'cache_enabled': 1,
-  \ }
-
-set runtimepath^=~/.config/nvim/plugged/ctrlp/ctrlp.vim
-set directory=~/.config/nvim/temp
-
-"set wildmode=list:full
-set wildmode=list:longest
-set path+=**
-set cursorline
-set hlsearch
-set cindent
-set clipboard=unnamed
 
 " Code commenter
 Plug 'scrooloose/nerdcommenter'
@@ -84,7 +95,7 @@ Plug 'mhinz/vim-signify'
 Plug 'tomasr/molokai'
 
 " Visually displaying indent levels in code
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Yggdroot/indentLine'
 
 "enable repeating supported plugin maps with '.'
 Plug 'tpope/vim-repeat'
@@ -109,16 +120,9 @@ Plug 'terryma/vim-multiple-cursors'
 " Dart Plugin 
 Plug 'dart-lang/dart-vim-plugin'
 
-"Plug 'natebosch/dart_language_server'
-
-"Plug 'reisub0/hot-reload.vim'
-
 Plug 'thosakwe/vim-flutter'
 
-"Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-
-Plug 'leafgarland/typescript-vim'
-
+" Typescript
 Plug 'Quramy/tsuquyomi'
 
 Plug 'machakann/vim-highlightedyank'
@@ -137,6 +141,24 @@ Plug 'Vimjas/vim-python-pep8-indent'
 
 Plug 'jparise/vim-graphql'
 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" php
+"" PHP Bundle
+Plug 'arnaud-lb/vim-php-namespace'
+
+
+" python
+"" Python Bundle
+Plug 'davidhalter/jedi-vim'
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+
+
+" typescript
+Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
+
+
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
 
@@ -147,6 +169,28 @@ if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
     :PlugInstall
 endif
+
+filetype plugin indent on
+
+"" Copy/Paste/Cut
+if has('unnamedplus')
+  set clipboard=unnamed,unnamedplus
+endif
+
+noremap YY "+y<CR>
+noremap <leader>p "+gP<CR>
+noremap XX "+x<CR>
+
+set runtimepath^=~/.config/nvim/plugged/ctrlp/ctrlp.vim
+set directory=~/.config/nvim/temp
+
+"set wildmode=list:full
+set wildmode=list:longest
+set path+=**
+set cursorline
+set hlsearch
+set cindent
+
 
 set termguicolors
 set noswapfile
@@ -163,13 +207,13 @@ set smartindent
 set autoindent
 set hlsearch
 
-
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set bomb
 set binary
 set mouse= 
+
 "set autoread
 
 
@@ -193,8 +237,6 @@ if !exists('g:not_finish_vimplug')
   colorscheme jellybeans
 endif
 
-" save as sudo
-ca w!! w !sudo tee "%"
 
 " Keybindings start
 
@@ -229,7 +271,11 @@ nmap <C-f> :!gitfiles<CR>
 " gitfiles in /usr/bin/gitfiles content below
 "git whatchanged --name-only --pretty="" origin..HEAD | sort | uniq -u<CR>
 
-nmap <C-b> :!git blame %<CR>
+" Git
+nmap <C-b> :Gblame<CR>
+noremap <Leader>gs :Gstatus<CR>
+noremap <Leader>gb :Gblame<CR>
+noremap <Leader>gd :Gvdiff<CR>
 
 " NERDTree -----------------------------
 
@@ -267,58 +313,34 @@ nmap ,F :Lines<CR>
 nmap ,r :Ack
 nmap ,wr :Ack <cword><CR>
 
-" mappings to jump to changed blocks
-nmap <leader>sn <plug>(signify-next-hunk)
-nmap <leader>sp <plug>(signify-prev-hunk)
-
 "Coc.vim
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+"nmap <silent> gd <Plug>(coc-definition)
+"nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gi <Plug>(coc-implementation)
+"nmap <silent> gr <Plug>(coc-references)
 
-"autocmd FileType dart nmap <buffer> <C-]> <Plug>(coc-definition)
-"autocmd FileType python nmap <buffer> <C-]> <Plug>(coc-definition)
+
+autocmd FileType dart nmap <buffer> <C-]> <Plug>(coc-definition)
+autocmd FileType python nmap <buffer> <C-]> <Plug>(coc-definition)
 autocmd FileType typescript nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType javascript nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
 
 " Keybindings end 
 
-" nicer colors
-highlight DiffAdd           cterm=bold ctermbg=none ctermfg=119
-highlight DiffDelete        cterm=bold ctermbg=none ctermfg=167
-highlight DiffChange        cterm=bold ctermbg=none ctermfg=227
-highlight SignifySignAdd    cterm=bold ctermbg=237  ctermfg=119
-highlight SignifySignDelete cterm=bold ctermbg=237  ctermfg=167
-highlight SignifySignChange cterm=bold ctermbg=237  ctermfg=227
+" save as sudo
+ca w!! w !sudo tee "%"
 
-" Declarations
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
 
-" don;t show these file types
-let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
-
-" autofocus on tagbar open
-let g:tagbar_autofocus = 1
-
-" this first setting decides in which order try to guess your current vcs
-" UPDATE it to reflect your preferences, it will speed up opening files
-let g:signify_vcs_list = [ 'git', 'hg' ]
-
-" Autoclose ------------------------------
-
-" Fix to let ESC work as espected with Autoclose plugin
-" (without this, when showing an autocompletion window, ESC won't leave insert
-"  mode)
-let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
-
-" Airline ------------------------------
-
-let g:airline_powerline_fonts = 0
-let g:airline_theme = 'jellybeans'
-let g:airline#extensions#whitespace#enabled = 0
-
-let g:ctrlp_map = '<c-p>'
-let g:indent_guides_enable_on_vim_startup = 1
 
 "to use fancy symbols for airline, uncomment the following lines and use a
 " patched font (more info on docs/fancy_symbols.rst)
@@ -326,32 +348,21 @@ if !exists('g:airline_symbols')
    let g:airline_symbols = {}
 endif
 
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
 
 " Dart default settings 
 let dart_format_on_save = 1
 let dart_style_guide = 2
 let g:lsc_server_commands = {'dart': 'dart_language_server'}
+let dart_html_in_string=v:true
+
 
 autocmd BufWritePre *.dart silent! :FlutterHotRestart
 autocmd BufWritePre *.php,*.html,*.css,*.js silent! :%s/\s\+$//e
 autocmd BufWritePre *.php,*.html,*.css,*.js silent! :%s///g
 
-"autocmd BufEnter * NERDTreeMirror
-"autocmd VimEnter * NERDTree
-"autocmd VimEnter * wincmd w
 autocmd BufWritePre *.ts :Prettier
 autocmd BufWritePre *.js :Prettier
 autocmd BufWritePre *.yaml :Prettier
 autocmd BufWritePre *.html :Prettier
 autocmd BufWritePre *.json :Prettier
 
-" autocmd BufEnter * if !argc() | NERDTreeMirror | endif
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_collect_identifiers_from_tags_files = 1
