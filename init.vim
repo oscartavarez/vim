@@ -1,44 +1,44 @@
 " Declarations
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_collect_identifiers_from_tags_files = 1
-
+let mapleader=" " "space
 let vim_plug_just_installed = 0
 let vim_plug_path = expand('~/.config/nvim/autoload/plug.vim')
 
-" don;t show these file types
-let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
+" NERDTree options
+let g:NERDTreeWinPos = "right"
 
-" autofocus on tagbar open
-let g:tagbar_autofocus = 1
-
-" this first setting decides in which order try to guess your current vcs
-" UPDATE it to reflect your preferences, it will speed up opening files
 let g:signify_vcs_list = [ 'git', 'hg' ]
 
-" Autoclose ------------------------------
-
-" Fix to let ESC work as espected with Autoclose plugin
-" (without this, when showing an autocompletion window, ESC won't leave insert
-"  mode)
-let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
-
 " Airline ------------------------------
-
-let g:airline_theme = 'jellybeans'
-let g:airline_powerline_fonts = 0
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_skip_empty_sections = 1
 
-let g:ctrlp_map = '<c-p>'
-let g:indent_guides_enable_on_vim_startup = 1
-let g:flutter_hot_reload_on_save = 1
+" Airline symbols
+let g:airline_left_sep = "\uE0C0"
+let g:airline_right_sep = "\uE0C2"
+let g:airline_symbols = {}
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+" Airline theme
+let g:airline_solarized_bg='dark'
+let g:airline_theme='molokai'
 
+" vim-ident-guides
+let g:indent_guides_enable_on_vim_startup = 1
+
+" Dart default settings 
+let dart_format_on_save = 1
+let dart_style_guide = 2
+let g:lsc_server_commands = {'dart': 'dart_language_server'}
+let dart_html_in_string=v:
 
 " Vim-plug initialization
-" Avoid modify this section, unless you are very sure of what you are doing
 if !filereadable(vim_plug_path)
     echo "Installing Vim-plug..."
     echo ""
@@ -47,15 +47,16 @@ if !filereadable(vim_plug_path)
     let vim_plug_just_installed = 1
 endif
 
-" manually load vim-plug the first time
 if vim_plug_just_installed
     :execute 'source '.fnameescape(vim_plug_path)
 endif
 
 call plug#begin('~/.config/nvim/plugged')
 
-" Now the actual plugins:
 
+"ctrlp
+let g:ctrlp_working_path_mode = 0
+set runtimepath^=~/.config/nvim/plugged/ctrlp/ctrlp.vim
 
 " Code commenter
 Plug 'scrooloose/nerdcommenter'
@@ -63,21 +64,12 @@ Plug 'scrooloose/nerdcommenter'
 " Better file browser
 Plug 'scrooloose/nerdtree'
 
-" Class/module browser
-Plug 'majutsushi/tagbar'
-
 " Search results counter
 Plug 'vim-scripts/IndexedSearch'
 
 " Airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
-" Code and files fuzzy finder
-" Extension to ctrlp, for fuzzy command finder
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-Plug 'junegunn/fzf.vim'
 
 " Paint css colors with the real color
 Plug 'lilydjwg/colorizer'
@@ -87,12 +79,13 @@ Plug 'valloric/MatchTagAlways'
 
 " Git integration
 Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Git/mercurial/others diff icons on the side of the file lines
 Plug 'mhinz/vim-signify'
 
 " Color scheme
-Plug 'tomasr/molokai'
+Plug 'nanotech/jellybeans.vim'
 
 " Visually displaying indent levels in code
 Plug 'Yggdroot/indentLine'
@@ -105,11 +98,9 @@ Plug 'machakann/vim-highlightedyank'
 
 " Fancy start screen for Vim
 Plug 'mhinz/vim-startify'
+
 " script for text filtering and alignment
 Plug 'godlygeek/tabular'
-
-" Asynchronous linting and make framework for Neovim/Vim
-Plug 'neomake/neomake'
 
 " EditorConfig plugin for Vim
 Plug 'editorconfig/editorconfig-vim'
@@ -117,53 +108,52 @@ Plug 'editorconfig/editorconfig-vim'
 " Sublime Text's awesome multiple selection
 Plug 'terryma/vim-multiple-cursors'
 
-" Dart Plugin 
+" Dart Plugin
 Plug 'dart-lang/dart-vim-plugin'
-
 Plug 'thosakwe/vim-flutter'
 
 " Typescript
 Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
+"Plug 'HerringtonDarkholme/yats.vim'
 
-Plug 'machakann/vim-highlightedyank'
-
+"Prettier
 Plug 'prettier/vim-prettier'
 
-Plug 'morhetz/gruvbox'
-
-Plug 'nanotech/jellybeans.vim'
-
-Plug 'Valloric/YouCompleteMe'
-
+"Ack.vim
 Plug 'mileszs/ack.vim'
 
+"Python
 Plug 'Vimjas/vim-python-pep8-indent'
 
+"GraphQL file detection, syntax highlighting, and indentation
 Plug 'jparise/vim-graphql'
 
+"Plug 'Valloric/YouCompleteMe', {'for': 'php,typescript,javascript,html,css,xml'}
+"Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': 'dart,ptyhon'}
+
+"Vim intellisense
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" php
-"" PHP Bundle
-Plug 'arnaud-lb/vim-php-namespace'
+"Icons
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
+"Whitespace highlight
+Plug 'ntpeters/vim-better-whitespace'
 
-" python
-"" Python Bundle
-Plug 'davidhalter/jedi-vim'
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+"snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
+"Fuzzy Search
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
-" typescript
-Plug 'leafgarland/typescript-vim'
-Plug 'HerringtonDarkholme/yats.vim'
+"PHP
+Plug 'stephpy/vim-php-cs-fixer'
 
-
-" Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
-
-" ============================================================================
-" Install plugins the first time vim runs
 
 if vim_plug_just_installed
     echo "Installing Bundles, please ignore key map error messages"
@@ -173,15 +163,12 @@ endif
 filetype plugin indent on
 
 "" Copy/Paste/Cut
-if has('unnamedplus')
-  set clipboard=unnamed,unnamedplus
-endif
+set clipboard=unnamed
 
 noremap YY "+y<CR>
 noremap <leader>p "+gP<CR>
 noremap XX "+x<CR>
 
-set runtimepath^=~/.config/nvim/plugged/ctrlp/ctrlp.vim
 set directory=~/.config/nvim/temp
 
 "set wildmode=list:full
@@ -190,12 +177,13 @@ set path+=**
 set cursorline
 set hlsearch
 set cindent
-
+set hidden
 
 set termguicolors
 set noswapfile
 set ruler
 set colorcolumn=80
+set smartcase
 
 " tabs and spaces handling
 set expandtab
@@ -205,7 +193,6 @@ set softtabstop=4
 set shiftwidth=4
 set smartindent
 set autoindent
-set hlsearch
 
 set encoding=utf-8
 set fileencoding=utf-8
@@ -213,9 +200,6 @@ set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set bomb
 set binary
 set mouse= 
-
-"set autoread
-
 
 " show line numbers
 set nu
@@ -237,132 +221,120 @@ if !exists('g:not_finish_vimplug')
   colorscheme jellybeans
 endif
 
+"Nicer vertical split
+hi LineNr guibg=bg
+set foldcolumn=2
+hi foldcolumn guibg=bg
+hi VertSplit guibg=bg guifg=bg
+
+" Floating Window colors
+highlight NormalFloat cterm=NONE ctermfg=14 ctermbg=0 gui=NONE guifg=#93a1a1 guibg=#002931
 
 " Keybindings start
 
-"let mapleader=","
-
-" tab navigation mappings
-map tt :tabnew<ENTER>
-map <M-Right> :tabn<CR>
-imap <M-Right> <ESC>:tabn<CR>
-map <M-Left> :tabp<CR>
-imap <M-Left> <ESC>:tabp<CR>
 
 " buffer movement
 nmap <C-l> :bnext<CR>
 nmap <C-h> :bprevious<CR>
 nmap <C-d> :bdelete<CR>
 
-map <C-q> :Ack! '<C-r>=expand("<cword>")<CR>'<CR>
 
-" map \ gc <esc>
-map <leader>2 <leader>ci
-nmap ,c <leader>2
+" toggle comment
+nmap ,c :call NERDComment(0, 'toggle');<CR>
+vmap ,c :call NERDComment(0, 'toggle');<CR>
 
 " clear search results
 nnoremap <silent> // :noh<CR>
 
-" toggle tagbar display
-map <leader>3 :TagbarToggle<CR>
-
-" git shows file in commit
-nmap <C-f> :!gitfiles<CR>
-" gitfiles in /usr/bin/gitfiles content below
-"git whatchanged --name-only --pretty="" origin..HEAD | sort | uniq -u<CR>
+" Kill flutter pid
+nmap <leader>f :!kill -SIGUSR1 $(pgrep -f flutter_tools.snapshot) &> /dev/null<CR>
 
 " Git
-nmap <C-b> :Gblame<CR>
+noremap <leader>b :Gblame<CR>
 noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 
+noremap <leader>v :tabe $MYVIMRC<CR>
+
 " NERDTree -----------------------------
 
-" toggle nerdtree display
-map <leader>1 :NERDTreeToggle<CR>
 " open nerdtree with the current file selected
-nmap ,t :NERDTreeFind<CR>
-
-" Tasklist ------------------------------
-
-" show pending tasks list
-map <leader>4 :TaskList<CR>
-
-" Neomake ------------------------------
-
-" Run linter on write
-autocmd! BufWritePost * Neomake
-
-" Fzf ------------------------------
-
-" file finder mapping
-nmap ,e :Files<CR>
-" tags (symbols) in current file finder mapping
-nmap ,g :BTag<CR>
-" tags (symbols) in all files finder mapping
-nmap ,G :Tag<CR>
-" general code finder in current file mapping
-nmap ,f :BLines<CR>
-" general code finder in all files mapping
-nmap ,F :Lines<CR>
-" commands finder mapping
-"nmap ,c :Commands<CR>
+nmap <leader>t :NERDTreeFind<CR>
+nmap ,t :call ToggleNERDTree()<CR><Esc>
 
 " mappings
-nmap ,r :Ack
-nmap ,wr :Ack <cword><CR>
+map <C-q> :Ack! '<C-r>=expand("<cword>")<CR>'<CR>
 
-"Coc.vim
-"nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
-"nmap <silent> gi <Plug>(coc-implementation)
-"nmap <silent> gr <Plug>(coc-references)
-
-
-autocmd FileType dart nmap <buffer> <C-]> <Plug>(coc-definition)
-autocmd FileType python nmap <buffer> <C-]> <Plug>(coc-definition)
-autocmd FileType typescript nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
-autocmd FileType javascript nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
+"fuzzy mappings
+nmap <C-b> :Buffers<CR>
+nmap <C-f> :Files<CR>
 
 " Keybindings end 
 
 " save as sudo
 ca w!! w !sudo tee "%"
 
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev Qall! qall!
-cnoreabbrev Wq wq
-cnoreabbrev Wa wa
-cnoreabbrev wQ wq
-cnoreabbrev WQ wq
-cnoreabbrev W w
-cnoreabbrev Q q
-cnoreabbrev Qall qall
+autocmd FileType typescript nmap <buffer> <C-]> <Plug>(coc-definition)
+autocmd FileType dart nmap <buffer> <C-]> <Plug>(coc-definition)
+autocmd FileType python nmap <buffer> <C-]> <Plug>(coc-definition)
+autocmd FileType javascript nmap <buffer> <C-]> <Plug>(coc-definition)
+autocmd FileType php nmap <buffer> <C-]> <Plug>(coc-definition)
+"autocmd FileType typescript nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
+"autocmd FileType javascript nmap <buffer> <C-]> :YcmCompleter GoTo<CR>
 
-
-"to use fancy symbols for airline, uncomment the following lines and use a
-" patched font (more info on docs/fancy_symbols.rst)
-if !exists('g:airline_symbols')
-   let g:airline_symbols = {}
-endif
-
-
-" Dart default settings 
-let dart_format_on_save = 1
-let dart_style_guide = 2
-let g:lsc_server_commands = {'dart': 'dart_language_server'}
-let dart_html_in_string=v:true
-
-
-autocmd BufWritePre *.dart silent! :FlutterHotRestart
+"autocmd BufWritePre *.dart silent! :FlutterHotReload
+autocmd BufWritePre *.dart silent! :!kill -SIGUSR1 $(pgrep -f flutter_tools.snapshot) &> /dev/null
 autocmd BufWritePre *.php,*.html,*.css,*.js silent! :%s/\s\+$//e
 autocmd BufWritePre *.php,*.html,*.css,*.js silent! :%s///g
 
-autocmd BufWritePre *.ts :Prettier
-autocmd BufWritePre *.js :Prettier
+"autocmd BufWritePre *.ts :Prettier
+"autocmd BufWritePre *.js :Prettier
+"autocmd BufWritePre *.json :Prettier
 autocmd BufWritePre *.yaml :Prettier
 autocmd BufWritePre *.html :Prettier
-autocmd BufWritePre *.json :Prettier
 
+"Credits to 
+"https://kassioborges.dev/2019/04/10/neovim-fzf-with-a-floating-window.html
+
+" Reverse the layout to make the FZF list top-down
+let $FZF_DEFAULT_OPTS='--layout=reverse'
+
+" Using the custom window creation function
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+" Function to create the custom floating window
+function! FloatingFZF()
+  " creates a scratch, unlisted, new, empty, unnamed buffer
+  " to be used in the floating window
+  let buf = nvim_create_buf(v:false, v:true)
+
+  " 90% of the height
+  let height = float2nr(&lines * 0.9)
+  " 60% of the height
+  let width = float2nr(&columns * 0.6)
+  " horizontal position (centralized)
+  let horizontal = float2nr((&columns - width) / 2)
+  " vertical position (one line down of the top)
+  let vertical = 1
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height
+        \ }
+
+  " open the new window, floating, and enter to it
+  call nvim_open_win(buf, v:true, opts)
+endfunction
+
+function! ToggleNERDTree()
+	if g:NERDTree.IsOpen()
+		:NERDTreeToggle
+	else
+		:NERDTreeFind
+		":vertical resize 50
+	endif
+endfunction
